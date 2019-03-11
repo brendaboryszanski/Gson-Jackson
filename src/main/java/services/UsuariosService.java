@@ -1,5 +1,6 @@
 package services;
 
+import external.mapper.UsuariosMapper;
 import external.random.RandomConnector;
 import external.random.dto.NombreDTO;
 import external.random.dto.UsuarioDTO;
@@ -17,20 +18,11 @@ public class UsuariosService {
 
     @Autowired
     public RandomConnector randomConnector;
+    @Autowired
+    public UsuariosMapper usuariosMapper;
+
     public List<Usuario> generarRandom(){
-        return this.mapearUsuarios(randomConnector.obtenerUsuarios());
+        return usuariosMapper.convertirAUsuario(randomConnector.obtenerUsuarios());
     }
 
-    private List<Usuario> mapearUsuarios(UsuariosContainer usuarios){
-        return usuarios.getUsuario().stream().map(this::mapearUsuario).collect(Collectors.toList());
-    }
-    private Usuario mapearUsuario(UsuarioDTO usuarioDTO){
-        return new Usuario(usuarioDTO.getGender(),
-                this.mapearNombre(usuarioDTO.getName()),
-                usuarioDTO.getEmail(),
-                usuarioDTO.getCell());
-    }
-    private NombreUsuario mapearNombre(NombreDTO nombreDTO){
-        return new NombreUsuario(nombreDTO.first, nombreDTO.last);
-    }
 }
